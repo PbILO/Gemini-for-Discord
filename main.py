@@ -3,10 +3,13 @@ from discord.ext import commands
 from google import genai
 import asyncio
 from config import *
+import os
 
 intents = discord.Intents().all()
 genaiClient = genai.Client(api_key=geminiToken)
-discordBot = commands.Bot(command_prefix=prefix, intents=intents)
+discordBot = commands.Bot(command_prefix=prefix, intents=intents, proxy=proxyServer)
+os.environ["HTTP_PROXY"] = proxyServer
+os.environ["HTTPS_PROXY"] = proxyServer
 
 def generate(prompt: str) -> str:
     GLOBAL_MEMORY = ('Отвечай на языке запроса без '
