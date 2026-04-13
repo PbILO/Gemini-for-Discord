@@ -34,11 +34,7 @@ async def generate_async(prompt: str) -> str:
 @discordBot.command()
 async def ai(ctx, *content):
     try:
-        response = await generate_async('ответь текстом (на языке запроса) '
-                            'без какого-либо специального '
-                            'форматирования, чтобы это можно'
-                            ' было скопировать и отправить'
-                            ' сообщением' + ' '.join(content))
+        response = await generate_async(' '.join(content))
         await ctx.reply(response.text)
     except Exception as e:
         await ctx.reply('Ошибка на стороне Gemini. '
