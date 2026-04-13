@@ -17,7 +17,7 @@ def generate(prompt: str) -> str:
                      'а просто пояснить его, если он слишком длинный. Но по возможности '
                      'всегда отправляй код или решения целиком, если они вмещаются в лимит '
                      '1950 символов (с пробелами)\n')
-    response = genaiClient.models.generate_content(model="gemini-3-flash-preview",
+    response = genaiClient.models.generate_content(model=geminiModel,
                                                    contents=GLOBAL_MEMORY + prompt)
     return response
 
