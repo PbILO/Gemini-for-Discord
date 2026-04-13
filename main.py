@@ -41,6 +41,7 @@ async def ai(ctx, *content):
 
 @discordBot.command()
 async def retell(ctx, n: int = 50):
+    n = abs(n)
     messages = []
     async for message in ctx.channel.history(limit=n):
         messages.append(message.author.name + ': ' + message.content + '\n')
