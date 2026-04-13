@@ -4,9 +4,11 @@ from google import genai
 import asyncio
 from config import *
 import os
+from google.genai import types
 
 intents = discord.Intents().all()
-genaiClient = genai.Client(api_key=geminiToken)
+genaiClient = genai.Client(api_key=geminiToken, http_options=types.HttpOptions(
+        client_args={'proxy': proxyServer}))
 discordBot = commands.Bot(command_prefix=prefix, intents=intents, proxy=proxyServer)
 os.environ["HTTP_PROXY"] = proxyServer
 os.environ["HTTPS_PROXY"] = proxyServer
