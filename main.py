@@ -41,12 +41,8 @@ async def retell(ctx, n: int = 50):
     async for message in ctx.channel.history(limit=n):
         messages.append(message.author.name + ': ' + message.content + '\n')
     try:
-        response = await generate_async('Сейчас ты увидишь диалог чата. '
-                            'Твоя задача кратко пересказать, '
-                            'о чём был диалог, '
-                            'чтобы не пришлось читать '
-                            'все эти сообщения.\n'
-                            + ''.join(messages[1:][::-1]))
+        response = await generate_async('Кратко перескажи суть диалога. Текст:'
+                                        + ''.join(messages[1:][::-1]))
         print(messages)
         await ctx.reply(response.text)
     except Exception as e:
@@ -59,13 +55,11 @@ async def explain(ctx):
     if ctx.message.reference:
         original = await ctx.fetch_message(ctx.message.reference.message_id)
         try:
-            response = await generate_async('Сейчас ты увидишь что-то сложное. '
-                                'Если это код, то определи его язык, добавь комментарии и пояснения '
-                                'и объясни, какой функционал этого кода. Если же это сложные уравнения,'
-                                ' термины и тому подобное, то объясни всё современным языком, '
-                                'чтобы было максимально понятно. Можешь использовать шутки '
-                                'и мемы для наглядности. Сократи своё объяснение. '
-                                'Вот то, что надо проанализировать: \n'
+            response = await generate_async('Проанализируй: если код — определи язык, '
+                                            'добавь комментарии и кратко объясни; если '
+                                            'нет — объясни просто и понятно (можно с юмором).'
+                                            'Сократи ответ. Текст:'
+                                            + original.content)
                                 + original.content)
             await ctx.reply(response.text)
         except Exception as e:
