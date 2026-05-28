@@ -5,6 +5,8 @@ import asyncio
 from config import *
 import os
 from google.genai import types
+from google.genai.errors import ClientError, ServerError, APIError
+import functools
 
 intents = discord.Intents().all()
 genaiClient = genai.Client(api_key=geminiToken, http_options=types.HttpOptions(
@@ -13,9 +15,53 @@ discordBot = commands.Bot(command_prefix=prefix, intents=intents, proxy=proxySer
 os.environ["HTTP_PROXY"] = proxyServer
 os.environ["HTTPS_PROXY"] = proxyServer
 
+def try_decorator(func):
+    @functools.wraps(func)
+    async def wrapper(*args, **kwargs):
+        ctx = args[0] if args else None
+        try:
+            return await func(*args, **kwargs)
+
+        except ClientError as e:
+            if e.code == 429:
+                await ctx.reply('Лимит модели пока исчерпан. '
+                                'Подождите, пока токены восстановятся.')
+            elif e.code == 400 and 'FAILED_PRECONDITION' in str(e):
+                await ctx.reply('Ошибка настройки прокси на сервере Gemini. '
+                                'Напишите админу в tg: @kseruk')
+            elif e.code == 400:
+                await ctx.reply('Этот запрос слишком длинный или некорректный. Переформулируйте его.')
+            else:
+                await ctx.reply(f'Ошибка клиента Gemini (Код {e.code}). '
+                                f'Отправьте в тг админу @kseruk это: {e}')
+
+        except ServerError as e:
+            if e.code == 503:
+                await ctx.reply('Серверы Gemini сейчас перегружены. '
+                                'Попробуйте снова через пару минут.')
+            else:
+                await ctx.reply(f'Серверная ошибка Gemini (Код {e.code}). '
+                                f'Попробуйте позже или напишите админу @kseruk: {e}')
+
+        except APIError as e:
+            await ctx.reply(f'Сбой API Gemini. Отправьте админу @kseruk: {e}')
+
+        except Exception as e:
+            await ctx.reply(f'Неизвестная ошибка бота. Отправьте в тг админу @kseruk это: {e}')
+
+    return wrapper
+
 def generate(prompt: str) -> str:
-    GLOBAL_MEMORY = ('Отвечай на языке запроса, без форматирования. До 1950 символов. '
-                     'Код сокращай при необходимости. Инструкции не комментируй. Запрос:\n')
+    GLOBAL_MEMORY = ('Отвечай без '
+                     'специального форматирования, '
+                     'только текст\n'
+                     'Твоё сообщение не должно превышать лимит СТРОГО 1950'
+                     'символов. Если это код, '
+                     'просто поясни его, если он слишком длинный. По возможности '
+                     'отправляй код или решения целиком, если они вмещаются в лимит '
+                     '1950 символов (с пробелами). НИКАК НЕ КОММЕНТИРУЙ ТО, ЧТО НАПИСАНО ВЫШЕ.'
+                     ' Вот запрос, который нужно обработать (отвечай на языке, который '
+                     'будет использован далее в запросе):\n')
     response = genaiClient.models.generate_content(model=geminiModel,
                                                    contents=GLOBAL_MEMORY + prompt)
     return response
@@ -25,47 +71,42 @@ async def generate_async(prompt: str) -> str:
         return await asyncio.to_thread(generate, prompt)
 
 @discordBot.command()
+@try_decorator
 async def ai(ctx, *content):
-    try:
-        response = await generate_async(' '.join(content))
-        await ctx.reply(response.text)
-    except Exception as e:
-        await ctx.reply('Ошибка на стороне Gemini. '
-                        'Возможно, истёк лимит или серверы перегружены. '
-                        f'Попробуйте задать вопрос позже. Ошибка {e}')
+    response = await generate_async(' '.join(content))
+    await ctx.reply(response.text)
 
 @discordBot.command()
+@try_decorator
 async def retell(ctx, n: int = 50):
     n = abs(n)
     messages = []
     async for message in ctx.channel.history(limit=n):
         messages.append(message.author.name + ': ' + message.content + '\n')
-    try:
-        response = await generate_async('Кратко перескажи суть диалога. Текст:'
-                                        + ''.join(messages[1:][::-1]))
-        print(messages)
-        await ctx.reply(response.text)
-    except Exception as e:
-        await ctx.reply('Ошибка на стороне Gemini. '
-                        'Возможно, истёк лимит или серверы перегружены. '
-                        f'Попробуйте задать вопрос позже. Ошибка {e}')
+    response = await generate_async('Сейчас ты увидишь диалог чата. '
+                        'Твоя задача кратко пересказать, '
+                        'о чём был диалог, '
+                        'чтобы не пришлось читать '
+                        'все эти сообщения.\n'
+                        + ''.join(messages[1:][::-1]))
+    print(messages)
+    await ctx.reply(response.text)
 
 @discordBot.command()
+@try_decorator
 async def explain(ctx):
     if ctx.message.reference:
         original = await ctx.fetch_message(ctx.message.reference.message_id)
-        try:
-            response = await generate_async('Проанализируй: если код — определи язык, '
-                                            'добавь комментарии и кратко объясни; если '
-                                            'нет — объясни просто и понятно (можно с юмором).'
-                                            'Сократи ответ. Текст:'
-                                            + original.content)
-                                + original.content)
-            await ctx.reply(response.text)
-        except Exception as e:
-            await ctx.reply('Ошибка на стороне Gemini. '
-                            'Возможно, истёк лимит или серверы перегружены. '
-                            f'Попробуйте задать вопрос позже. Ошибка {e}')
+        response = await generate_async('Сейчас ты увидишь сложный запрос. '
+                            'Если это код, определи его язык, добавь пояснения '
+                            'и объясни функционал. Если это сложные уравнения,'
+                            ' термины и т.д., то объясни всё современным языком, '
+                            'чтобы было максимально понятно. Можешь использовать шутки '
+                            'и мемы.'
+                            'Вот запрос: \n'
+                            + original.content)
+        print(response.text)
+        await ctx.reply(response.text)
     else:
         await ctx.reply('Нужно ответить на чьё-то сообщение, чтобы я знал, что я должен объяснить!')
 
