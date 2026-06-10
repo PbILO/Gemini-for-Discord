@@ -2,7 +2,6 @@ import os
 import asyncio
 import functools
 from vkbottle.bot import Bot, Message
-from vkbottle.dispatch.rules.base import CommandRule
 from google import genai
 from google.genai import types
 from google.genai.errors import ClientError, ServerError, APIError
