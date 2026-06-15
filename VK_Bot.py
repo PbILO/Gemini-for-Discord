@@ -74,6 +74,11 @@ async def generate_async(prompt: str) -> str:
     async with asyncio.Semaphore(1):
         return await asyncio.to_thread(generate, prompt)
 
+@bot.on.message(text = f"{prefix}aihelp")
+@try_decorator
+async def aihelp(message: Message):
+    await message.answer(botCommands)
+
 @bot.on.message(text = f"{prefix}ai <args>")
 @try_decorator
 async def ai(message: Message, args: str):
@@ -112,6 +117,20 @@ async def retell(message: Message, args: str):
         'чтобы не пришлось читать '
         'все эти сообщения.\n'
         + ''.join(messages[1:][::-1]))
+    await message.answer(response.text)
+
+@bot.on.message(text = f"{prefix}context_ai <args>")
+@try_decorator
+async def context_ai(message: Message, args: str):
+    history = await bot.api.messages.get_history(peer_id=message.peer_id, count=100)
+    messages = []
+    for m in history.items:
+        if m.text:
+            messages.append(f"User_{m.from_id}: {m.text}\n")
+    response = await generate_async('Ответь на вопрос максимально кратко:' + ' '.join(args) + '\n'
+                                    + 'Используй для точного ответа и поиска нужной информации'
+                                      ' диалог пользователей:'
+                                    + ''.join(messages[1:][::-1]))
     await message.answer(response.text)
 
 @bot.on.message(text=f"{prefix}explain")

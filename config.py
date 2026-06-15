@@ -1,11 +1,23 @@
 discordToken = ''#<<<<ADD YOUR TOKEN
-geminiToken = ''#<<<<ADD YOUR TOKEN
-prefix = '/'
+discordAddBotToServerURL = ''#YOU DON'T NEED IT
 
 vkToken = '' #<<<<ADD YOUR TOKEN
 vkGroupId =   #<<<<ADD YOUR ID OF GROUP
 
-discordAddBotToServerURL = ''#YOU DON'T NEED IT
+geminiToken = ''#<<<<ADD YOUR TOKEN
 geminiModel='gemini-2.5-flash-lite'
-proxyServer = '' #YOUR PROXY
-#'http://82dnkE:oHKH66@196.19.120.143:8000'
+proxyServer='' #YOUR PROXY
+
+prefix = '/'
+botCommands = ('/aihelp - помощь по боту. \n\n'
+               '/ai <prompt> - простое обращение к искусственному интеллекту. '
+            'Бот видит только ваше сообщение и сообщение, на которое вы ответили. Задайте свой вопрос!\n'
+            'Пример использования: /ai Сколько весит слон? \n\n'
+            '/context_ai <prompt> - Бот поможет проанализировать конец вашего диалога (последние 100 сообщений)'
+               ' и ответить на ваш вопрос.\n'
+            'Пример использования: /context_ai Найди в диалоге ссылку на домашнее задание №3\n\n'
+            '/retell <N> - саммаризация последних сообщений. '
+            'Бот пересказывает, о чём шёл диалог в последние N сообщений.\n'
+            'Пример использования: /retell 50\n\n'
+            '/explain - Даёт пояснение к сложной информации, будь то код, формулы или задачи.'
+            'Работает, только если ответить на какое-то сообщение этой командой.\n\n')
