@@ -1,6 +1,3 @@
-import discord
-from discord.ext import commands
-from google import genai
 import asyncio
 
 import config
