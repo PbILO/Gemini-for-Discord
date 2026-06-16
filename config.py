@@ -1,9 +1,10 @@
-discordToken = ''#<<<<ADD YOUR TOKEN
-geminiToken = ''#<<<<ADD YOUR TOKEN
+import os
+
+discordToken = os.getenv("DISCORD_TOKEN")
+geminiToken = os.getenv("GEMINI_TOKEN")
+proxyServer = os.getenv("PROXY") #proxymania.su
 prefix = '/'
-discordAddBotToServerURL = ''#YOU DON'T NEED IT
-geminiModel='gemini-2.5-flash-lite'
-proxyServer='' #YOUR PROXY
+geminiModel='gemini-3.1-flash-lite'
 botCommands = ('/aihelp - помощь по боту. \n\n'
                '/ai <prompt> - простое обращение к искусственному интеллекту. '
             'Бот видит только ваше сообщение и сообщение, на которое вы ответили. Задайте свой вопрос!\n'
