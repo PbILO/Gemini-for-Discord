@@ -5,7 +5,7 @@ geminiToken = os.getenv("GEMINI_TOKEN")
 proxyServer = os.getenv("PROXY") #proxymania.su
 prefix = '/'
 geminiModel='gemini-3.1-flash-lite'
-botCommands = ('/aihelp - помощь по боту. \n\n'
+botCommands = ('/help - помощь по боту. \n\n'
                '/ai <prompt> - простое обращение к искусственному интеллекту. Задайте свой вопрос!\n'
             'Пример использования: /ai Сколько весит слон? \n\n'
             '/context_ai <prompt> - Бот поможет проанализировать конец вашего диалога (последние 100 сообщений)'
