@@ -1,9 +1,10 @@
-discordToken = 'MTQ5MjQ3ODIxMzU0NzM2MDMzNw.GY4gPh.8RfgWuZ4YIHb6SeZII8fTCoYmsB0wkeEONt8nU'
-geminiToken = 'AIzaSyC5eDZ-6i6Lh9Wsj3sUjRUODCux5TfCluc'
+import os
+
+discordToken = os.getenv("DISCORD_TOKEN")
+geminiToken = os.getenv("GEMINI_TOKEN")
+proxyServer = os.getenv("PROXY") #proxymania.su
 prefix = '/'
-discordAddBotToServerURL = 'https://discord.com/oauth2/authorize?client_id=1492478213547360337&permissions=8&integration_type=0&scope=bot'
 geminiModel='gemini-3.1-flash-lite'
-proxyServer='http://AwCk2Z:6156LE@72.56.141.181:8000' #proxymania.su
 botCommands = ('/aihelp - помощь по боту. \n\n'
                '/ai <prompt> - простое обращение к искусственному интеллекту. '
             'Бот видит только ваше сообщение и сообщение, на которое вы ответили. Задайте свой вопрос!\n'
