@@ -1,0 +1,18 @@
+discordToken = 'MTQ5MjQ3ODIxMzU0NzM2MDMzNw.GY4gPh.8RfgWuZ4YIHb6SeZII8fTCoYmsB0wkeEONt8nU'
+geminiToken = 'AIzaSyC5eDZ-6i6Lh9Wsj3sUjRUODCux5TfCluc'
+prefix = '/'
+discordAddBotToServerURL = 'https://discord.com/oauth2/authorize?client_id=1492478213547360337&permissions=8&integration_type=0&scope=bot'
+geminiModel='gemini-3.1-flash-lite'
+proxyServer='http://AwCk2Z:6156LE@72.56.141.181:8000' #proxymania.su
+botCommands = ('/aihelp - помощь по боту. \n\n'
+               '/ai <prompt> - простое обращение к искусственному интеллекту. '
+            'Бот видит только ваше сообщение и сообщение, на которое вы ответили. Задайте свой вопрос!\n'
+            'Пример использования: /ai Сколько весит слон? \n\n'
+            '/context_ai <prompt> - Бот поможет проанализировать конец вашего диалога (последние 100 сообщений)'
+               ' и ответить на ваш вопрос.\n'
+            'Пример использования: /context_ai Найди в диалоге ссылку на домашнее задание №3\n\n'
+            '/retell <N> - саммаризация последних сообщений. '
+            'Бот пересказывает, о чём шёл диалог в последние N сообщений.\n'
+            'Пример использования: /retell 50\n\n'
+            '/explain - Даёт пояснение к сложной информации, будь то код, формулы или задачи.'
+            'Работает, только если ответить на какое-то сообщение этой командой.\n\n')
