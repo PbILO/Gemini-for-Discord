@@ -84,7 +84,6 @@ async def generate_async(prompt: str) -> str:
 async def on_ready():
     print(f"Бот {discordBot.user.name} успешно запущен!")
     try:
-        # Синхронизируем команды с серверами Discord
         synced = await discordBot.tree.sync()
         print(f"Синхронизировано команд: {len(synced)}")
     except Exception as e:
@@ -94,12 +93,6 @@ async def on_ready():
 @try_decorator
 async def ai(interaction: discord.Interaction, content: str):
     await interaction.response.defer(ephemeral=False)
-    #if message:
-    #    prompt = f'''Прошлое сообщение диалога:
-    #             {message.author.name}: {message.content}
-    #             Вопрос пользователя:
-    #             {content})'''
-    #else:
     prompt = content
     response = await generate_async(prompt)
     await interaction.followup.send(response.text)
@@ -115,12 +108,13 @@ async def explain(interaction: discord.Interaction, message: discord.Message):
                                     'чтобы было максимально понятно. Можешь использовать шутки '
                                     'и мемы.'
                                     'Вот запрос: \n'
-                                    + message.text)
+                                    + message.content)
     await interaction.followup.send(response.text)
 
 @discordBot.tree.command(name="help", description="Помощь по боту")
 @try_decorator
 async def aihelp(interaction: discord.Interaction):
+    await interaction.response.defer(ephemeral=False)
     await interaction.followup.send('Команды бота: \n\n' + config.botCommands)
 
 @discordBot.tree.command(name="retell", description="Пересказ последних N сообщений чата")
