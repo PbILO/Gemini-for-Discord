@@ -1,7 +1,12 @@
+from dotenv import load_dotenv
+load_dotenv()
+
+import discord
+from discord.ext import commands
+from google import genai
 import asyncio
 
 import config
-from config import *
 import os
 from google.genai import types
 from google.genai.errors import ClientError, ServerError, APIError
