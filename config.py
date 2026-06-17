@@ -1,15 +1,18 @@
-discordToken = ''#<<<<ADD YOUR TOKEN
+import os
+
 discordAddBotToServerURL = ''#YOU DON'T NEED IT
 
-vkToken = '' #<<<<ADD YOUR TOKEN
-vkGroupId =   #<<<<ADD YOUR ID OF GROUP
+VK_TOKEN = os.getenv("VK_TOKEN")
+VK_GROUP_ID = os.getenv("VK_GROUP_ID")
 
-geminiToken = ''#<<<<ADD YOUR TOKEN
 geminiModel='gemini-2.5-flash-lite'
-proxyServer='' #YOUR PROXY
+
+discordToken = os.getenv("DISCORD_TOKEN")
+geminiToken = os.getenv("GEMINI_TOKEN")
+proxyServer = os.getenv("PROXY") #proxymania.su
 
 prefix = '/'
-botCommands = ('/aihelp - помощь по боту. \n\n'
+botCommandsVK = ('/help - помощь по боту. \n\n'
                '/ai <prompt> - простое обращение к искусственному интеллекту. '
             'Бот видит только ваше сообщение и сообщение, на которое вы ответили. Задайте свой вопрос!\n'
             'Пример использования: /ai Сколько весит слон? \n\n'
