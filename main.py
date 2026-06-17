@@ -14,11 +14,14 @@ from google.genai.errors import ClientError, ServerError, APIError
 import functools
 
 intents = discord.Intents().all()
-genaiClient = genai.Client(api_key=config.geminiToken, http_options=types.HttpOptions(
-        client_args={'proxy': config.proxyServer}))
-discordBot = commands.Bot(command_prefix=config.prefix, intents=intents, proxy=config.proxyServer)
-os.environ["HTTP_PROXY"] = config.proxyServer
-os.environ["HTTPS_PROXY"] = config.proxyServer
+genaiClient = genai.Client(api_key=config.geminiToken)
+discordBot = commands.Bot(command_prefix=config.prefix, intents=intents)
+if config.proxyServer:
+    genaiClient = genai.Client(api_key=config.geminiToken, http_options=types.HttpOptions(
+            client_args={'proxy': config.proxyServer}))
+    discordBot = commands.Bot(command_prefix=config.prefix, intents=intents, proxy=config.proxyServer)
+    os.environ["HTTP_PROXY"] = config.proxyServer
+    os.environ["HTTPS_PROXY"] = config.proxyServer
 
 def try_decorator(func):
     @functools.wraps(func)
