@@ -1,4 +1,7 @@
+from dotenv import load_dotenv
 import os
+load_dotenv()
+import vkbottle
 import asyncio
 import functools
 from vkbottle.bot import Bot, Message
@@ -13,7 +16,7 @@ os.environ["HTTPS_PROXY"] = proxyServer
 genaiClient = genai.Client(api_key=geminiToken, http_options=types.HttpOptions(
     client_args={'proxy': proxyServer}))
 
-bot = Bot(token = vkToken)
+bot = Bot(token = VK_TOKEN)
 
 def try_decorator(func):
     @functools.wraps(func)
@@ -74,10 +77,10 @@ async def generate_async(prompt: str) -> str:
     async with asyncio.Semaphore(1):
         return await asyncio.to_thread(generate, prompt)
 
-@bot.on.message(text = f"{prefix}aihelp")
+@bot.on.message(text = f"{prefix}help")
 @try_decorator
 async def aihelp(message: Message):
-    await message.answer(botCommands)
+    await message.answer(botCommandsVK)
 
 @bot.on.message(text = f"{prefix}ai <args>")
 @try_decorator
