@@ -89,7 +89,7 @@ source .venv/bin/activate
 ### Шаг 3: Установка зависимостей
 Установите внешние библиотеки, необходимые для работы клиентов Discord и Gemini:
 ```bash
-pip install discord.py google-genai python-dotenv
+pip install discord.py google-genai python-dotenv vkbottle
 ```
 
 ### Шаг 4: Конфигурация окружения
@@ -121,7 +121,7 @@ python VK_Bot.py
 Откройте терминал или командную строку и установите зависимости одной командой:
 
 ```bash
-pip install discord.py google-genai python-dotenv
+pip install discord.py google-genai python-dotenv vkbottle
 ```
 
 ### Шаг 2: Настройка конфигурации
